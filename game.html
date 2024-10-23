@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Candy Game</title>
+  <style>
+    body {
+      background-color: #f0f0f0;
+      font-family: sans-serif;
+      text-align: center;
+    }
+
+    .game-container {
+      display: inline-block;
+      margin: 20px auto;
+      border: 2px solid #ccc;
+      padding: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(5, 50px);
+      grid-template-rows: repeat(5, 50px);
+      gap: 5px;
+      margin: 20px auto;
+    }
+
+    .candy {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #fff;
+      border: 2px solid #ccc;
+      cursor: pointer;
+    }
+
+    .candy.green {
+      background-color: #5cb85c;
+    }
+
+    .candy.red {
+      background-color: #d9534f;
+    }
+
+    .candy.blue {
+      background-color: #4285f4;
+    }
+
+    .candy.yellow {
+      background-color: #ffcc00;
+    }
+
+    .candy.purple {
+      background-color: #9933cc;
+    }
+
+    .candy.orange {
+      background-color: #ff8c00;
+    }
+
+    .info {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <h1>Candy Game</h1>
+    <div class="grid" id="grid"></div>
+    <div class="info">
+      <p>Goal: Collect 12 green candies</p>
+      <p>Moves: <span id="moves">14</span></p>
+      <p>Green candies: <span id="green-count">0</span></p>
+    </div>
+  </div>
+
+  <script>
+    const grid = document.getElementById('grid');
+    const movesElement = document.getElementById('moves');
+    const greenCountElement = document.getElementById('green-count');
+
+    let moves = 14;
+    let greenCount = 0;
+
+    // Create a 2D array to represent the grid
+    const gridArray = [];
+    for (let i = 0; i < 5; i++) {
+      gridArray[i] = [];
+      for (let j = 0; j < 5; j++) {
+        gridArray[i][j] = generateCandy();
+      }
+    }
+
+    // Function to generate random candy color
+    function generateCandy() {
+      const colors = ['green', 'red', 'blue', 'yellow', 'purple', 'orange'];
+      const randomIndex = Math.floor(Math.random() * colors.length);
+      return colors[randomIndex];
+    }
+
+    // Function to create candy element
+    function createCandy(color) {
+      const candy = document.createElement('div');
+      candy.classList.add('candy', color);
+      return candy;
+    }
+
+    // Function to update the grid
+    function updateGrid() {
+      grid.innerHTML = '';
+      for (let i = 0; i < 5; i++) {
+        for (let j = 0; j < 5; j++) {
+          const candy = createCandy(gridArray[i][j]);
+          grid.appendChild(candy);
+        }
+      }
+    }
+
+    // Function to handle candy click
+    function handleCandyClick(event) {
+      const candy = event.target;
+      const row = Array.from(grid.children).indexOf(candy.parentElement);
+      const col = Array.from(candy.parentElement.children).indexOf(candy);
+
+      // Check if there's a valid move
+      if (isValidMove(row, col)) {
+        // Swap candies
+        swapCandies(row, col);
+
+        // Update moves
+        moves--;
+        movesElement.textContent = moves;
+
+        // Check if the player has won
+        if (greenCount === 12) {
+          alert('Congratulations! You won!');
+          return;
+        }
+
+        // Check if the player has run out of moves
+        if (moves === 0) {
+          alert('Game over! You ran out of moves.');
+          return;
+        }
+      }
+    }
+
+    // Function to check if a move is valid
+    function isValidMove(row, col) {
+      // Check if the candy is on the edge of the grid
+      if (row === 0 || row === 4 || col === 0 || col === 4) {
+        return false;
+      }
+
+      // Check if the candy is adjacent to a green candy
+      const adjacentCandies = [
+        [row - 1, col],
+        [row + 1, col],
+        [row, col - 1],
+        [row, col + 1],
+      ];
+      for (const [adjacentRow, adjacentCol] of adjacentCandies) {
+        if (gridArray[adjacentRow][adjacentCol] === 'green') {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    // Function to swap candies
+    function swapCandies(row, col) {
+      // Swap the candy with the candy above it
+      [gridArray[row][col], gridArray[row - 1][col]] = [gridArray[row - 1][col], gridArray[row][col]];
+
+      // Update the grid
+      updateGrid();
+
+      // Update the green candy count
+      greenCount = 0;
+      for (let i = 0; i < 5; i++) {
+        for (let j = 0; j < 5; j++) {
+          if (gridArray[i][j] === 'green') {
+            greenCount++;
+          }
+        }
+      }
+      greenCountElement.textContent = greenCount;
+    }
+
+    // Initialize the grid
+    updateGrid();
+
+    // Add event listener for candy clicks
+    grid.addEventListener('click', handleCandyClick);
+  </script>
+</body>
+</html>     

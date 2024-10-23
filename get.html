@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td,
+        th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+
+
+</head>
+
+<body>
+
+    <form action="get1.php" method="POST">
+
+        <label for="title">Username: </label>
+        <input type="text" name="username" /> <br>
+
+        <label for="text">Blood Group: </label>
+        <input type="text" name="bloodgroup" /> <br>
+
+        <label for="text">Email id: </label>
+        <input type="email" name="email" /> <br>
+
+        <label for="text">Mobile No: </label>
+        <input type="number" name="Mbno" /> <br>
+
+        <label for="text">Address: </label>
+        <input type="text" name="Add" /> <br>
+
+
+        <input type="submit">
+    </form>
+
+</body>
+
+</html>
